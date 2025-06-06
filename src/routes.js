@@ -217,5 +217,11 @@ if (enableSwaggerEndpoint) {
   routes.use('/api-docs', swaggerUi.serve)
   routes.get('/api-docs', swaggerUi.setup(swaggerDocument) /* #swagger.ignore = true */)
 }
+// SESSION ENDPOINTS
+routes.get('/start/:sessionId', sessionController.startSession)
+routes.get('/status/:sessionId', sessionController.statusSession)
+routes.get('/qr/:sessionId', sessionController.sessionQrCode)
+routes.get('/qr-img/:sessionId', sessionController.sessionQrCodeImage)
+routes.get('/sessions', sessionController.getSessions)
 
 module.exports = { routes }
