@@ -110,7 +110,6 @@ const deleteMessage = async (req, res) => {
  * @param {string} req.params.sessionId - The session ID.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @param {boolean} req.body.everyone - Whether to download the media for everyone or just the sender.
  * @returns {Promise<void>} - A Promise that resolves with no value when the function completes.
  */
 const downloadMedia = async (req, res) => {
@@ -187,14 +186,14 @@ const downloadMediaAsData = async (req, res) => {
  * @param {string} req.body.messageId - The ID of the message to forward.
  * @param {string} req.body.chatId - The ID of the chat that contains the message to forward.
  * @param {string} req.body.destinationChatId - The ID of the chat to forward the message to.
- * @param {string} req.params.sessionId - The ID of the session to use the Telegram API with.
+ * @param {string} req.params.sessionId - The ID of the session to use with WhatsApp Web API.
  * @param {Object} res - The response object to be sent back to the client.
  * @returns {Object} - The response object with a JSON body containing the result of the forward operation.
  * @throws Will throw an error if the message is not found or if there is an error during the forward operation.
  */
 const forward = async (req, res) => {
   /*
-    #swagger.summary = 'Delete a message from the chat'
+    #swagger.summary = 'Forward a message to another chat'
     #swagger.requestBody = {
       required: true,
       schema: {
@@ -239,7 +238,7 @@ const forward = async (req, res) => {
  * @param {Object} req.body - The body of the request object.
  * @param {string} req.body.messageId - The ID of the message to get information about.
  * @param {string} req.body.chatId - The ID of the chat that contains the message to get information about.
- * @param {string} req.params.sessionId - The ID of the session to use the Telegram API with.
+ * @param {string} req.params.sessionId - The ID of the session to use with WhatsApp Web API.
  * @param {Object} res - The response object to be sent back to the client.
  * @returns {Object} - The response object with a JSON body containing the information about the message.
  * @throws Will throw an error if the message is not found or if there is an error during the get info operation.
@@ -262,18 +261,18 @@ const getInfo = async (req, res) => {
 }
 
 /**
- * Retrieves a list of contacts mentioned in a specific message
+ * Retrieves a list of contacts mentioned in a specific message.
  *
  * @async
- * @function
- * @param {Object} req - The HTTP request object
- * @param {Object} req.body - The request body
- * @param {string} req.body.messageId - The ID of the message to retrieve mentions from
- * @param {string} req.body.chatId - The ID of the chat where the message was sent
- * @param {string} req.params.sessionId - The ID of the session for the client making the request
- * @param {Object} res - The HTTP response object
- * @returns {Promise<void>} - The JSON response with the list of contacts
- * @throws {Error} - If there's an error retrieving the message or mentions
+ * @function getMentions
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.body - The request body.
+ * @param {string} req.body.messageId - The ID of the message to retrieve mentions from.
+ * @param {string} req.body.chatId - The ID of the chat where the message was sent.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
+ * @param {Object} res - The HTTP response object.
+ * @returns {Promise<void>} - The JSON response with the list of contacts.
+ * @throws {Error} - If there's an error retrieving the message or mentions.
  */
 const getMentions = async (req, res) => {
   /*
@@ -292,18 +291,18 @@ const getMentions = async (req, res) => {
 }
 
 /**
- * Retrieves the order information contained in a specific message
+ * Retrieves the order information contained in a specific message.
  *
  * @async
- * @function
- * @param {Object} req - The HTTP request object
- * @param {Object} req.body - The request body
- * @param {string} req.body.messageId - The ID of the message to retrieve the order from
- * @param {string} req.body.chatId - The ID of the chat where the message was sent
- * @param {string} req.params.sessionId - The ID of the session for the client making the request
- * @param {Object} res - The HTTP response object
- * @returns {Promise<void>} - The JSON response with the order information
- * @throws {Error} - If there's an error retrieving the message or order information
+ * @function getOrder
+ * @param {Object} req - The HTTP request object.
+ * @param {Object} req.body - The request body.
+ * @param {string} req.body.messageId - The ID of the message to retrieve the order from.
+ * @param {string} req.body.chatId - The ID of the chat where the message was sent.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
+ * @param {Object} res - The HTTP response object.
+ * @returns {Promise<void>} - The JSON response with the order information.
+ * @throws {Error} - If there's an error retrieving the message or order information.
  */
 const getOrder = async (req, res) => {
   /*
@@ -328,12 +327,12 @@ const getOrder = async (req, res) => {
  * @function getPayment
  * @param {Object} req - The HTTP request object.
  * @param {Object} res - The HTTP response object.
- * @param {string} req.params.sessionId - The session ID associated with the client making the request.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {Object} req.body - The message ID and chat ID associated with the message to retrieve payment information from.
  * @param {string} req.body.messageId - The ID of the message to retrieve payment information from.
  * @param {string} req.body.chatId - The ID of the chat the message is associated with.
- * @returns {Object} An object containing a success status and the payment information for the specified message.
- * @throws {Object} If the specified message is not found or if an error occurs during the retrieval process.
+ * @returns {Promise<void>} - The JSON response with the payment information.
+ * @throws {Error} - If there is an error retrieving the payment information.
  */
 const getPayment = async (req, res) => {
   /*
@@ -358,12 +357,12 @@ const getPayment = async (req, res) => {
  * @function getQuotedMessage
  * @param {Object} req - The HTTP request object.
  * @param {Object} res - The HTTP response object.
- * @param {string} req.params.sessionId - The session ID associated with the client making the request.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {Object} req.body - The message ID and chat ID associated with the message to retrieve quoted message information from.
  * @param {string} req.body.messageId - The ID of the message to retrieve quoted message information from.
  * @param {string} req.body.chatId - The ID of the chat the message is associated with.
- * @returns {Object} An object containing a success status and the quoted message information for the specified message.
- * @throws {Object} If the specified message is not found or if an error occurs during the retrieval process.
+ * @returns {Promise<void>} - The JSON response with the quoted message information.
+ * @throws {Error} - If there is an error retrieving the quoted message information.
  */
 const getQuotedMessage = async (req, res) => {
   /*
@@ -382,19 +381,19 @@ const getQuotedMessage = async (req, res) => {
 }
 
 /**
- * React to a specific message in a chat
+ * React to a specific message in a chat.
  *
  * @async
  * @function react
  * @param {Object} req - The HTTP request object containing the request parameters and body.
  * @param {Object} res - The HTTP response object to send the result.
- * @param {string} req.params.sessionId - The ID of the session to use.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {Object} req.body - The body of the request.
  * @param {string} req.body.messageId - The ID of the message to react to.
  * @param {string} req.body.chatId - The ID of the chat the message is in.
  * @param {string} req.body.reaction - The reaction to add to the message.
- * @returns {Object} The HTTP response containing the result of the operation.
- * @throws {Error} If there was an error during the operation.
+ * @returns {Promise<void>} - The JSON response with the reaction result.
+ * @throws {Error} - If there is an error reacting to the message.
  */
 const react = async (req, res) => {
   /*
@@ -422,7 +421,7 @@ const react = async (req, res) => {
         }
       }
     }
-  */
+  */  
   try {
     const { messageId, chatId, reaction = '' } = req.body
     const client = sessions.get(req.params.sessionId)
@@ -436,27 +435,27 @@ const react = async (req, res) => {
 }
 
 /**
- * Reply to a specific message in a chat
+ * Reply to a specific message in a chat.
  *
  * @async
  * @function reply
  * @param {Object} req - The HTTP request object containing the request parameters and body.
  * @param {Object} res - The HTTP response object to send the result.
- * @param {string} req.params.sessionId - The ID of the session to use.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The ID of the message to reply to.
  * @param {string} req.body.chatId - The ID of the chat the message is in.
  * @param {string} req.body.content - The content of the message to send.
- * @param {string} req.body.destinationChatId - The ID of the chat to send the reply to.
+ * @param {string} req.body.contentType - The type of the message content (string, MessageMedia, MessageMediaFromURL, Location, Contact, Poll).
  * @param {Object} req.body.options - Additional options for sending the message.
- * @returns {Object} The HTTP response containing the result of the operation.
- * @throws {Error} If there was an error during the operation.
+ * @returns {Promise<void>} - The JSON response with the replied message result.
+ * @throws {Error} - If there is an error replying to the message.
  */
 const reply = async (req, res) => {
   /*
     #swagger.summary = 'Send a message as a reply'
     #swagger.requestBody = {
       required: true,
-      '@content': {
+      "@content": {
         "application/json": {
           schema: {
             type: 'object',
@@ -532,7 +531,7 @@ const reply = async (req, res) => {
         break
       }
       default:
-        return sendErrorResponse(res, 400, 'contentType invalid, must be string, MessageMedia, MessageMediaFromURL, Location, Contact or Poll')
+        return sendErrorResponse(res, 400, 'Invalid contentType')
     }
     const repliedMessage = await message.reply(contentMessage, chatId, options)
     res.json({ success: true, repliedMessage })
@@ -542,16 +541,17 @@ const reply = async (req, res) => {
 }
 
 /**
- * @function star
+ * Stars a message by message ID and chat ID.
+ *
  * @async
- * @description Stars a message by message ID and chat ID.
+ * @function star
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.star() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @returns {Promise<void>} - The JSON response with the star result.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const star = async (req, res) => {
   /*
@@ -570,16 +570,17 @@ const star = async (req, res) => {
 }
 
 /**
- * @function unstar
+ * Unstars a message by message ID and chat ID.
+ *
  * @async
- * @description Unstars a message by message ID and chat ID.
+ * @function unstar
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.unstar() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @returns {Promise<void>} - The JSON response with the unstar result.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const unstar = async (req, res) => {
   /*
@@ -598,16 +599,17 @@ const unstar = async (req, res) => {
 }
 
 /**
- * @function getReactions
+ * Gets the reactions associated with the given message.
+ *
  * @async
- * @description Gets the reactions associated with the given message.
+ * @function getReactions
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.getReactions() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @returns {Promise<void>} - The JSON response with the reactions result.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const getReactions = async (req, res) => {
   /*
@@ -626,16 +628,17 @@ const getReactions = async (req, res) => {
 }
 
 /**
- * @function getReactions
+ * Gets groups mentioned in this message.
+ *
  * @async
- * @description Gets groups mentioned in this message
+ * @function getGroupMentions
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.getReactions() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @returns {Promise<void>} - The JSON response with the groups mentioned result.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const getGroupMentions = async (req, res) => {
   /*
@@ -654,16 +657,19 @@ const getGroupMentions = async (req, res) => {
 }
 
 /**
- * @function edit
+ * Edits a message by message ID and chat ID.
+ *
  * @async
- * @description Edits the current message
+ * @function edit
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.edit() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @param {string} req.body.content - The new content of the message.
+ * @param {Object} req.body.options - Options for editing the message if needed.
+ * @returns {Promise<void>} - The JSON response with the edited message result.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const edit = async (req, res) => {
   /*
@@ -708,16 +714,17 @@ const edit = async (req, res) => {
 }
 
 /**
- * @function getContact
+ * Gets the contact information from a message.
+ *
  * @async
- * @description Gets groups mentioned in this message
+ * @function getContact
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
- * @param {string} req.params.sessionId - The session ID.
+ * @param {string} req.params.sessionId - The session ID for the client making the request.
  * @param {string} req.body.messageId - The message ID.
  * @param {string} req.body.chatId - The chat ID.
- * @returns {Promise} A Promise that resolves with the result of the message.getReactions() call.
- * @throws {Error} If message is not found, it throws an error with the message "Message not found".
+ * @returns {Promise<void>} - The JSON response with the contact information.
+ * @throws {Error} - If message is not found, it throws an error with the message "Message not found".
  */
 const getContact = async (req, res) => {
   /*
@@ -734,8 +741,20 @@ const getContact = async (req, res) => {
     sendErrorResponse(res, 500, error.message)
   }
 }
-const { sessions } = require('../sessions')
 
+/**
+ * Sends a new message to a phone number using the specified session.
+ *
+ * @async
+ * @function sendMessage
+ * @param {Object} req - The request object.
+ * @param {Object} res - The response object.
+ * @param {string} req.body.sessionId - The session ID associated with the client.
+ * @param {string} req.body.phone - The phone number in international format, without symbols (e.g., "2126xxxxxxxx").
+ * @param {string} req.body.message - The text message to send.
+ * @returns {Promise<void>} - The JSON response indicating success or failure.
+ * @throws {Error} - If there is an error sending the message.
+ */
 const sendMessage = async (req, res) => {
   const { sessionId, phone, message } = req.body
 
@@ -771,5 +790,5 @@ module.exports = {
   getGroupMentions,
   edit,
   getContact,
-  sendMessage // ✅ تمت الإضافة هنا
+  sendMessage // ✅ Added this function
 }
