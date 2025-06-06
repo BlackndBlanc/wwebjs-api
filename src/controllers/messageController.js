@@ -734,6 +734,23 @@ const getContact = async (req, res) => {
     sendErrorResponse(res, 500, error.message)
   }
 }
+const { sessions } = require('../sessions')
+
+const sendMessage = async (req, res) => {
+  const { sessionId, phone, message } = req.body
+
+  const session = sessions.get(sessionId)
+  if (!session) {
+    return res.status(404).json({ success: false, message: 'Session not found' })
+  }
+
+  try {
+    await session.sendMessage(`${phone}@c.us`, message)
+    res.json({ success: true, message: 'Message sent successfully' })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
 
 module.exports = {
   getClassInfo,
@@ -753,5 +770,6 @@ module.exports = {
   getReactions,
   getGroupMentions,
   edit,
-  getContact
+  getContact,
+  sendMessage // ✅ تمت الإضافة هنا
 }
