@@ -223,5 +223,6 @@ routes.get('/status/:sessionId', sessionController.statusSession)
 routes.get('/qr/:sessionId', sessionController.sessionQrCode)
 routes.get('/qr-img/:sessionId', sessionController.sessionQrCodeImage)
 routes.get('/sessions', sessionController.getSessions)
+routes.post('/send-message', messageController.sendMessage) // ← أضف هذا السطر
 
 module.exports = { routes }
