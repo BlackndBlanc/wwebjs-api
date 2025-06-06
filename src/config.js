@@ -1,6 +1,3 @@
-// src/config.js
-// ─────────────────────────────────────────────────────────────────────────────
-
 // Load environment variables from .env file
 require('dotenv').config()
 
@@ -8,19 +5,7 @@ require('dotenv').config()
 const sessionFolderPath = process.env.SESSIONS_PATH || './sessions'
 const enableLocalCallbackExample = (process.env.ENABLE_LOCAL_CALLBACK_EXAMPLE || '').toLowerCase() === 'true'
 const globalApiKey = process.env.API_KEY
-
-// نضيف هنا تعريفَين جديدَين لرابطَي الويبهوك (اختبار / إنتاج)
-const baseWebhookURLTest = process.env.BASE_WEBHOOK_URL_TEST || ''
-const baseWebhookURLProd = process.env.BASE_WEBHOOK_URL_PROD || ''
-
-// نقرأ NODE_ENV (قد تكون 'development' أو 'production' أو أي قيمة قابلة للتعديل)
-const env = (process.env.NODE_ENV || '').toLowerCase()
-
-// إذا كانت البيئة 'production' نستخدم رابط الإنتاح، وإلا نستخدم رابط الاختبار
-const baseWebhookURL = (env === 'production')
-  ? baseWebhookURLProd
-  : baseWebhookURLTest
-
+const baseWebhookURL = process.env.BASE_WEBHOOK_URL
 const maxAttachmentSize = parseInt(process.env.MAX_ATTACHMENT_SIZE) || 10000000
 const setMessagesAsSeen = (process.env.SET_MESSAGES_AS_SEEN || '').toLowerCase() === 'true'
 const disabledCallbacks = process.env.DISABLED_CALLBACKS ? process.env.DISABLED_CALLBACKS.split('|') : []
@@ -41,10 +26,7 @@ module.exports = {
   sessionFolderPath,
   enableLocalCallbackExample,
   globalApiKey,
-
-  // هُنَا نصدّر الرابط الذي اختَرناه بناءً على البيئة
   baseWebhookURL,
-
   maxAttachmentSize,
   setMessagesAsSeen,
   disabledCallbacks,
