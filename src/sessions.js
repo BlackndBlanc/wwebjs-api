@@ -2,6 +2,8 @@ const { Client, LocalAuth } = require('whatsapp-web.js')
 const fs = require('fs')
 const path = require('path')
 const sessions = new Map()
+// Cache to store processed message IDs to prevent duplicates
+const processedMessages = new Set();
 const { baseWebhookURL, sessionFolderPath, maxAttachmentSize, setMessagesAsSeen, webVersion, webVersionCacheType, recoverSessions, chromeBin, headless, releaseBrowserLock } = require('./config')
 const { triggerWebhook, waitForNestedObject, checkIfEventisEnabled, sendMessageSeenStatus } = require('./utils')
 const { logger } = require('./logger')
@@ -157,6 +159,14 @@ const setupSession = async (sessionId) => {
 
 const initializeEvents = (client, sessionId) => {
   // check if the session webhook is overridden
+
+  // Clear the processed messages cache on session initialization
+  processedMessages.clear();
+  // Set a timer to clear the cache periodically to prevent unbounded growth
+  setInterval(() => {
+    processedMessages.clear();
+    logger.debug('Processed messages cache cleared.');
+  }, 30 * 60 * 1000); // Clear cache every 30 minutes
   const sessionWebhook = process.env[sessionId.toUpperCase() + '_WEBHOOK_URL'] || baseWebhookURL
   // Remove all existing listeners to prevent duplicates
   client.removeAllListeners()
@@ -280,8 +290,15 @@ const initializeEvents = (client, sessionId) => {
 
   checkIfEventisEnabled('message')
     .then(_ => {
+      // Use a Set to store processed message IDs for deduplication
       client.on('message', async (message) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message', { message })
+        // Check if message ID has already been processed
+        if (processedMessages.has(message.id.id)) {
+          logger.debug(`Duplicate message received, ID: ${message.id.id}. Skipping.`);
+          return;
+        }
+        // Add message ID to the set of processed messages
+        processedMessages.add(message.id.id);
         triggerWebSocket(sessionId, 'message', { message })
         if (message.hasMedia && message._data?.size < maxAttachmentSize) {
           // custom service event
@@ -302,8 +319,15 @@ const initializeEvents = (client, sessionId) => {
 
   checkIfEventisEnabled('message_ack')
     .then(_ => {
+      // Use a Set to store processed message IDs for deduplication
       client.on('message_ack', async (message, ack) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_ack', { message, ack })
+        // Check if message ID has already been processed
+        if (processedMessages.has(message.id.id)) {
+          logger.debug(`Duplicate message_ack received, ID: ${message.id.id}. Skipping.`);
+          return;
+        }
+        // Add message ID to the set of processed messages
+        processedMessages.add(message.id.id);
         triggerWebSocket(sessionId, 'message_ack', { message, ack })
         if (setMessagesAsSeen) {
           sendMessageSeenStatus(message)
@@ -313,8 +337,15 @@ const initializeEvents = (client, sessionId) => {
 
   checkIfEventisEnabled('message_create')
     .then(_ => {
+      // Use a Set to store processed message IDs for deduplication
       client.on('message_create', async (message) => {
-        triggerWebhook(sessionWebhook, sessionId, 'message_create', { message })
+        // Check if message ID has already been processed
+        if (processedMessages.has(message.id.id)) {
+          logger.debug(`Duplicate message_create received, ID: ${message.id.id}. Skipping.`);
+          return;
+        }
+        // Add message ID to the set of processed messages
+        processedMessages.add(message.id.id);
         triggerWebSocket(sessionId, 'message_create', { message })
         if (setMessagesAsSeen) {
           sendMessageSeenStatus(message)
