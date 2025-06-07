@@ -148,7 +148,7 @@ const setupSession = async (sessionId) => {
 
     const client = new Client(clientOptions)
     if (releaseBrowserLock) {
-      const singletonLockPath = path.resolve(path.join(sessionFolderPath, `session-${sessionId}`, 'SingletonLock'))
+      const singletonLockPath = path.resolve(path.join(sessionFolderPath, 'session-' + sessionId, 'SingletonLock'));
       const singletonLockExists = await fs.promises.lstat(singletonLockPath).then(() => true).catch(() => false)
       if (singletonLockExists) {
         logger.warn({ sessionId }, 'Browser lock file exists, removing')
