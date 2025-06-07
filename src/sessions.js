@@ -71,7 +71,7 @@ const restoreSessions = () => {
       // Iterate through the files in the parent folder
       for (const file of files) {
         // Use regular expression to extract the string from the folder name
-        const match = file.match(/^session-(.+)$/)
+        const match = file.match(/^session-(.+)$/);
         if (match) {
           const sessionId = match[1]
           logger.warn({ sessionId }, 'existing session detected')
@@ -88,7 +88,7 @@ const restoreSessions = () => {
 const setupSession = async (sessionId) => {
   try {
     if (sessions.has(sessionId)) {
-      return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) }
+      return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) };
     }
 
     // Disable the delete folder from the logout function (will be handled separately)
@@ -149,7 +149,7 @@ const setupSession = async (sessionId) => {
 
     // Save the session to the Map
     sessions.set(sessionId, client)
-    return { success: true, message: 'Session initiated successfully', client }
+    return { success: true, message: 'Session initiated successfully', client };
   } catch (error) {
     return { success: false, message: error.message, client: null }
   }
@@ -162,7 +162,7 @@ const initializeEvents = (client, sessionId) => {
   if (recoverSessions) {
     waitForNestedObject(client, 'pupPage').then(() => {
       const restartSession = async (sessionId) => {
-        sessions.delete(sessionId)
+        sessions.delete(sessionId);
         await client.destroy().catch(e => { })
         await setupSession(sessionId)
       }
@@ -363,8 +363,8 @@ const initializeEvents = (client, sessionId) => {
   client.on('qr', (qr) => {
     // by default QR code is being updated every 20 seconds
     if (client.qrClearTimeout) {
-      clearTimeout(client.qrClearTimeout)
-    }
+      clearTimeout(client.qrClearTimeout);
+    }    
     // inject qr code into session
     client.qr = qr
     client.qrClearTimeout = setTimeout(() => {
@@ -432,7 +432,7 @@ const initializeEvents = (client, sessionId) => {
 // Function to delete client session folder
 const deleteSessionFolder = async (sessionId) => {
   try {
-    const targetDirPath = path.join(sessionFolderPath, `session-${sessionId}`)
+    const targetDirPath = path.join(sessionFolderPath, `session-${sessionId}`);
     const resolvedTargetDirPath = await fs.promises.realpath(targetDirPath)
     const resolvedSessionPath = await fs.promises.realpath(sessionFolderPath)
 
