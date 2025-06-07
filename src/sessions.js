@@ -37,16 +37,13 @@ const validateSession = async (sessionId) => {
     const returnData = { success: false, state: null, message: '' }
 
     // Session not Connected 😢
-    -  if (sessions.has(sessionId)) {
--    return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) }
--  }
-+  if (sessions.has(sessionId)) {
-+    return {
-+      success: false,
-+      message: 'Session already exists for: ' + sessionId,
-+      client: sessions.get(sessionId),
-+    };
-+  }
+ if (sessions.has(sessionId)) {
+    return {
+      success: false,
+      message: 'Session already exists for: ' + sessionId,
+      client: sessions.get(sessionId),
+    };
+  }
 
 
     const client = sessions.get(sessionId)
