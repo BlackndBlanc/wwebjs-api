@@ -159,7 +159,6 @@ const setupSession = async (sessionId) => {
 
 const initializeEvents = (client, sessionId) => {
   // check if the session webhook is overridden
-
   // Clear the processed messages cache on session initialization
   processedMessages.clear();
   // Set a timer to clear the cache periodically to prevent unbounded growth
@@ -167,7 +166,7 @@ const initializeEvents = (client, sessionId) => {
     processedMessages.clear();
     logger.debug('Processed messages cache cleared.');
   }, 30 * 60 * 1000); // Clear cache every 30 minutes
-  const sessionWebhook = process.env[sessionId.toUpperCase() + '_WEBHOOK_URL'] || baseWebhookURL
+  const sessionWebhook = baseWebhookURL
   // Remove all existing listeners to prevent duplicates
   client.removeAllListeners()
 
