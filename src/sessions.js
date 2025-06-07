@@ -113,7 +113,7 @@ const restoreSessions = () => {
 const setupSession = async (sessionId) => {
   try {
     if (sessions.has(sessionId)) {
-      return { success: false, message: `Session already exists for: ${sessionId}`, client: sessions.get(sessionId) }
+     return { success: false, message: 'Session already exists for: ' + sessionId, client: sessions.get(sessionId) };
     }
 
     const localAuth = new LocalAuth({ clientId: sessionId, dataPath: sessionFolderPath })
