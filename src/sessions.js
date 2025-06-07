@@ -158,6 +158,8 @@ const setupSession = async (sessionId) => {
 const initializeEvents = (client, sessionId) => {
   // check if the session webhook is overridden
   const sessionWebhook = process.env[sessionId.toUpperCase() + '_WEBHOOK_URL'] || baseWebhookURL
+  // Remove all existing listeners to prevent duplicates
+  client.removeAllListeners()
 
   if (recoverSessions) {
     waitForNestedObject(client, 'pupPage').then(() => {
